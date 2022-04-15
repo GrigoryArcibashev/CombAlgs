@@ -51,7 +51,7 @@ def generate_vertexes(count: int) -> dict[int, ColoredVertex]:
 def is_graph_bipartite(
         graph: dict[int, list[ColoredVertex]],
         vertex: ColoredVertex,
-        color: Colors):
+        color: Colors) -> bool:
     """
     Проверяет двудольность графа,
     раскрашивая его в два цвета
