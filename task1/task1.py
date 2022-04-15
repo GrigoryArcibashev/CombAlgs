@@ -7,7 +7,7 @@ InputData = collections.namedtuple(
 Point = collections.namedtuple('Point', ['x', 'y'])
 
 
-class State(enum.Enum):
+class States(enum.Enum):
     EMPTY = 0
     WALL = 1
 
@@ -31,7 +31,7 @@ def get_tuple_of_int_from(string: str) -> tuple:
 
 def get_line_as_states(line: tuple) -> tuple:
     """Переводит кортеж чисел из 0/1 в кортеж из State.EMPTY/State.WALL"""
-    return tuple(map(lambda n: State.EMPTY if n == 0 else State.WALL, line))
+    return tuple(map(lambda n: States.EMPTY if n == 0 else States.WALL, line))
 
 
 def get_input_data() -> InputData:
@@ -62,7 +62,7 @@ def is_in_boundaries(row_count: int, column_count: int, point: Point) -> bool:
 
 def is_point_empty(maze: list, point: Point) -> bool:
     """Возвращает True если точка пуста, иначе False"""
-    return maze[point.x][point.y] == State.EMPTY
+    return maze[point.x][point.y] == States.EMPTY
 
 
 def are_start_and_target_correct(inp_data: InputData) -> bool:
