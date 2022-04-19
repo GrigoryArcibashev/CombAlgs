@@ -96,6 +96,7 @@ def write_result(result: bool, parts: Parts = None) -> None:
 
 
 def main() -> None:
+    """Точка входа в программу"""
     graph = read_input()
     if len(graph.keys()) == 0:
         write_result(True)
