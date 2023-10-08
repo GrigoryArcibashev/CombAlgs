@@ -1,5 +1,5 @@
 from collections import namedtuple
-from typing import Union, Tuple, List, Any
+from typing import Union
 
 END = 32767
 
