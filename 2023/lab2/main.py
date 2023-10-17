@@ -47,42 +47,39 @@ class FordFulkerson:
         return self._max_flow_value
 
     def _main(self) -> None:
-        prev = {v: None for v in range(self._N)}
-        method = {v: None for v in range(self._N)}
-
         while True:
-            delta, prev, method = self._mark(prev, method)
-            if delta[self._t] < INF_POS:
-                self._max_flow_value += delta[self._t]
-                w = self._t
-                while w != self._s:
-                    v = prev[w]
-                    if method[w] == MarkingMethod.FORWARD:
-                        self._flow_network[v][w] += delta[self._t]
-                    else:
-                        self._flow_network[w][v] -= delta[self._t]
-                    w = v
+            delta, prev, method = self._mark()
             if delta[self._t] == INF_POS:
-                break
+                break  # нет дополняющей цепи => построили максимальный поток
+            self._max_flow_value += delta[self._t]
+            w = self._t
+            while w != self._s:
+                v = prev[w]
+                if method[w] == MarkingMethod.FORWARD:
+                    self._flow_network[v][w] += delta[self._t]
+                else:
+                    self._flow_network[w][v] -= delta[self._t]
+                w = v
 
-    def _mark(self, prev, method) -> tuple[dict[int, int], dict[int, int], dict[int, MarkingMethod]]:
+    def _mark(self) -> tuple[dict[int, int], dict[int, int], dict[int, MarkingMethod]]:
         V = set(range(self._N))
         delta = {v: INF_POS for v in range(self._N)}
-        # prev = {v: None for v in range(self._N)}
-        # method = {v: None for v in range(self._N)}
+        prev = {v: None for v in range(self._N)}
+        method = {v: None for v in range(self._N)}
         que = deque()
         que.append(self._s)
 
         while delta[self._t] == INF_POS and len(que):
             v = que.popleft()
             for w in V.difference({self._s}):
-                if delta[w] == INF_POS and self._flow_network[v][w] < self._capacities[v][w]:
+                if delta[w] != INF_POS:
+                    continue
+                if self._flow_network[v][w] < self._capacities[v][w]:  # c - f > 0
                     delta[w] = min(delta[v], self._capacities[v][w] - self._flow_network[v][w])
                     que.append(w)
                     prev[w] = v
                     method[w] = MarkingMethod.FORWARD
-            for w in V.difference({self._s}):
-                if delta[w] == INF_POS and self._flow_network[w][v] > 0:
+                if self._flow_network[w][v] > 0:  # f > 0
                     delta[w] = min(delta[v], self._flow_network[w][v])
                     que.append(w)
                     prev[w] = v
